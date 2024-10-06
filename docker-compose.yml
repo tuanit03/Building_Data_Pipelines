@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # Config Server
+  configsvr:
+    image: mongo:6.0
+    container_name: configsvr
+    command: --replSet configReplSet --configsvr --port 27019 --keyFile /data/configdb/keyfile
+    volumes:
+      - ./data/configdb:/data/configdb
+      - ./mongo-keyfile:/data/configdb/keyfile
+    ports:
+      - 27019:27019
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - mongo-cluster-network
+
+  # Shard 1
+  shard1:
+    image: mongo:6.0
+    container_name: shard1
+    command: --replSet shard1ReplSet --shardsvr --port 27018 --keyFile /data/db/keyfile
+    volumes:
+      - ./data/shard1:/data/db
+      - ./mongo-keyfile:/data/db/keyfile
+    ports:
+      - 27018:27018
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - mongo-cluster-network
+
+  # Shard 2
+  shard2:
+    image: mongo:6.0
+    container_name: shard2
+    command: --replSet shard2ReplSet --shardsvr --port 27018 --keyFile /data/db/keyfile
+    volumes:
+      - ./data/shard2:/data/db
+      - ./mongo-keyfile:/data/db/keyfile
+    ports:
+      - 27028:27018
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - mongo-cluster-network
+
+  # Shard 3
+  shard3:
+    image: mongo:6.0
+    container_name: shard3
+    command: --replSet shard3ReplSet --shardsvr --port 27018 --keyFile /data/db/keyfile
+    volumes:
+      - ./data/shard3:/data/db
+      - ./mongo-keyfile:/data/db/keyfile
+    ports:
+      - 27038:27018
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    networks:
+      - mongo-cluster-network
+
+  # Mongos Router
+  mongos:
+    image: mongo:6.0
+    container_name: mongos
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    command: >
+      mongos --configdb configReplSet/configsvr:27019
+      --bind_ip_all --port 27017 --keyFile /data/configdb/keyfile
+    ports:
+      - 27017:27017
+    depends_on:
+      - configsvr
+      - shard1
+      - shard2
+      - shard3
+    volumes:
+      - ./mongo-keyfile:/data/configdb/keyfile
+    networks:
+      - mongo-cluster-network
+
+volumes:
+  configdb:
+  shard1data:
+  shard2data:
+  shard3data:
+
+networks:
+  mongo-cluster-network:
+    driver: bridge
