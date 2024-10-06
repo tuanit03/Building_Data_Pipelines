@@ -73,11 +73,20 @@ The custom network used by all services to communicate with each other. It uses 
    airflow celery worker
 7. At this point, the data pipeline is fully set up. Now you just need to monitor the following:
 - Logs on the Airflow web Server
- 
+
+
+  <img src="https://github.com/user-attachments/assets/72b3b703-a747-41ac-880c-7d2a2c11d7ce" alt="..." width="800" />
+   
 - The number of commands and inserts on MongoDB Compass
- 
+
+  
+   <img src="https://github.com/user-attachments/assets/2d8d3030-21a5-467a-ae32-394764791269" alt="..." width="800" />
+   
 - RAM consumption on WSL2 Ubuntu
- 
+
+  
+  <img src="https://github.com/user-attachments/assets/ab3b5d75-988e-4096-88c3-6cad42ab9397" alt="..." width="800" />
+
 
 
 
