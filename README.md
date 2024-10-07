@@ -5,7 +5,7 @@
 
 - **Extract (E):** I will extract data from the VnExpress website using Airflow, parallelizing the process with Celery to optimize performance.
 - **Load (L):** The extracted data will be loaded into a MongoDB architecture consisting of 3 shards, 1 config server, and 1 router. The data will be stored in the "articles" collection.
-- **Transform (T):** I will use the pre-trained VnCoreNLP machine learning model to transform the data, and the transformed results will be saved in the "articles_transformed" collection.
+- **Transform (T):** I will use the pre-trained VnCoreNLP machine learning model to transform the data, and the transformed results will be saved in the "transformed_articles" collection.
 
 ---
 
